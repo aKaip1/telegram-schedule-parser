@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Telegram-бот для отслеживания расписания
 
 Этот бот парсит расписание с сайта [https://www.ямк-салехард.рф/](https://www.ямк-салехард.рф/) и отправляет уведомления в Telegram при его обновлении.
@@ -13,3 +14,6 @@
 1. Установите зависимости:
    ```bash
    pip install -r requirements.txt
+=======
+# telegram-schedule-parser
+>>>>>>> 04cdf8e554ffaa65cc60b4063dc0228b4eaefe74
