@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Расписание 24ВЕБ</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 10px;
+            background-color: #f0f2f5;
+        }
+        .day {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .day-title {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #0088cc;
+        }
+        .lesson {
+            margin-top: 8px;
+        }
+        .time {
+            color: #888;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Расписание группы 24ВЕБ</h1>
+    <div id="schedule-container">Загрузка...</div>
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        // Загружаем расписание с API
+        async function loadSchedule() {
+            try {
+                // ЗАМЕНИ НА ТВОЙ РЕАЛЬНЫЙ URL, КОГДА ЗАПУСТИШЬ FLASK НА ХОСТИНГЕ
+                const response = await fetch('https://my-schedule-bot-app.herokuapp.com/api/schedule');
+                const data = await response.json();
+                displaySchedule(data.schedule);
+            } catch (error) {
+                console.error('Ошибка загрузки расписания:', error);
+                document.getElementById('schedule-container').innerText = 'Ошибка загрузки расписания';
+            }
+        }
+
+        function displaySchedule(schedule) {
+            const container = document.getElementById('schedule-container');
+            container.innerHTML = '';
+
+            // Разбиваем расписание на дни
+            const days = schedule.split('\n\n--- ');
+            days[0] = days[0].replace('--- ', '');
+
+            days.forEach(dayText => {
+                if (!dayText.trim()) return;
+
+                const div = document.createElement('div');
+                div.className = 'day';
+
+                const lines = dayText.split('\n');
+                const title = lines.shift();
+                const titleDiv = document.createElement('div');
+                titleDiv.className = 'day-title';
+                titleDiv.innerText = title;
+                div.appendChild(titleDiv);
+
+                lines.forEach(line => {
+                    if (!line.trim()) return;
+                    const lessonDiv = document.createElement('div');
+                    lessonDiv.className = 'lesson';
+                    lessonDiv.innerText = line;
+                    div.appendChild(lessonDiv);
+                });
+
+                container.appendChild(div);
+            });
+        }
+
+        // Загружаем при открытии
+        loadSchedule();
+
+        // Обновляем каждые 5 минут
+        setInterval(loadSchedule, 300000);
+    </script>
+</body>
+</html>
